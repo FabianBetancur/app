@@ -1,0 +1,7 @@
+name: app-0.0.1-SNAPSHOT
+
+services:
+  web:
+    image: app-0.0.1-SNAPSHOT
+    ports:
+      - 9000:9000
