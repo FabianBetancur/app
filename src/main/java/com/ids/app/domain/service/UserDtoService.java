@@ -21,7 +21,9 @@ public class UserDtoService {
 
         this.userRepository = userRepository;
     }
-
+    public List<UserDto>getByColumns(){
+        return userRepository.getByColumns();
+    }
     public List<UserDto> getAll(){
         LOGGER.info("User Service :: getAll()");
         return userRepository.getAll();

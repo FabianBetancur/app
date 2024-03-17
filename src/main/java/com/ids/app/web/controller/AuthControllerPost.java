@@ -2,6 +2,7 @@ package com.ids.app.web.controller;
 
 import com.ids.app.domain.UserDto;
 import com.ids.app.domain.dto.AuthenticationRequest;
+import com.ids.app.domain.dto.RefreshTokenRequest;
 import com.ids.app.domain.dto.UserRegistrationRequest;
 import com.ids.app.domain.service.UserDtoService;
 import com.ids.app.domain.service.UserService;
@@ -36,11 +37,25 @@ public class AuthControllerPost {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new HashMap<String,String>(){{
                         put("refreshToken",refreshToken);
-                        put("token",token);
+                        put("accessToken",token);
                     }});
         } catch (AuthenticationException ex){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("{\"message\":\""+ ex.getMessage()+"\"}");
+        }
+    }
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request){
+        try {
+            UserDto user = userDtoService.getByEmail(jwtUtil.extractUsername(request.getToken())).get();
+            String token = jwtUtil.generateToken(user.getUserId());
+            String refreshToken = jwtUtil.generateRefreshToken(user.getUserId());
+            return ResponseEntity.status(HttpStatus.OK).body(new HashMap<String,String>(){{
+                put("refreshToken",refreshToken);
+                put("accessToken",token);
+            }});
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
         }
     }
     @PostMapping("/register")
