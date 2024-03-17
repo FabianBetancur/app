@@ -20,6 +20,13 @@ public class UserRepository implements UserRepositoryDto {
         this.userCrudRepository = userCrudRepository;
         this.mapper = userMapper;
     }
+
+    @Override
+    public List<UserDto> getByColumns() {
+        List<User> userList = userCrudRepository.getByColumns().get();
+        return mapper.toUserDto(userList);
+    }
+
     @Override
     public List<UserDto> getAll() {
         List<User> userList = userCrudRepository.findAll();

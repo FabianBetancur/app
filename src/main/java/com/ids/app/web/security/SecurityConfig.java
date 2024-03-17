@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,7 +41,7 @@ public class SecurityConfig  {
         return authProvider;
     }
     @Bean
-    public AuthenticationManager authenticationManager() throws Exception{
+    public AuthenticationManager authenticationManager() throws AuthenticationServiceException{
         return authentication -> authenticationProvider().authenticate(authentication);
     }
     @Bean
@@ -51,8 +52,9 @@ public class SecurityConfig  {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/users/**").hasAnyRole()
-                .antMatchers(HttpMethod.GET,"/email/**").hasAnyRole()
+                .antMatchers(HttpMethod.POST,"/email/send-email").permitAll()
+                .antMatchers(HttpMethod.GET,"/users/**").authenticated()
+                //
                 .anyRequest()
                 .authenticated()
                 .and()

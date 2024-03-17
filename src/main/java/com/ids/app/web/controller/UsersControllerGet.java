@@ -25,7 +25,8 @@ public class UsersControllerGet {
     }
     @GetMapping("/all")
     public ResponseEntity<List<UserDto>>getAll(){
-        return new ResponseEntity<>(userDtoService.getAll(), HttpStatus.OK);
+        List<UserDto> list = userDtoService.getAll();
+        return new ResponseEntity<>(userDtoService.getByColumns(), HttpStatus.OK);
     }
     @GetMapping("/user")
     public ResponseEntity<?>getById(@RequestParam(name = "id")long id){
