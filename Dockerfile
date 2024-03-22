@@ -1,6 +1,4 @@
-FROM openjdk:17-alpine
-
-WORKDIR /app
+FROM amazoncorretto:21-alpine-jdk
 
 COPY build/libs/app-0.0.1-SNAPSHOT.jar .
 
