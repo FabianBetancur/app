@@ -51,6 +51,8 @@ public class SecurityConfig  {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                //.antMatchers("/static/favicon.ico").permitAll()
+                .antMatchers("/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/email/send-email").permitAll()
                 .antMatchers(HttpMethod.GET,"/users/**").authenticated()

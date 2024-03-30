@@ -7,6 +7,8 @@ import com.ids.app.domain.dto.UserRegistrationRequest;
 import com.ids.app.domain.service.UserDtoService;
 import com.ids.app.domain.service.UserService;
 import com.ids.app.web.security.JwtUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/auth")
 public class AuthControllerPost {
+    private final Log LOGGER = LogFactory.getLog(AuthControllerPost.class);
     private final UserService userService;
     private final UserDtoService userDtoService;
     private final JwtUtil jwtUtil;
@@ -34,6 +37,7 @@ public class AuthControllerPost {
             String token = userService.loginUser(request.getUser(), request.getPassword());
             UserDto user  = userDtoService.getByEmail(request.getUser()).get();
             String refreshToken = jwtUtil.generateRefreshToken(user.getUserId());
+            LOGGER.info("logged user :"+user.getUserEmail());
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new HashMap<String,String>(){{
                         put("refreshToken",refreshToken);
@@ -41,7 +45,9 @@ public class AuthControllerPost {
                     }});
         } catch (AuthenticationException ex){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("{\"message\":\""+ ex.getMessage()+"\"}");
+                    .body(new HashMap<String,String>(){{
+                        put("message",ex.getMessage());
+                    }});
         }
     }
     @PostMapping("/refresh-token")
@@ -55,7 +61,10 @@ public class AuthControllerPost {
                 put("accessToken",token);
             }});
         } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new HashMap<String,String>(){{
+                        put("message",ex.getMessage());
+            }});
         }
     }
     @PostMapping("/register")
@@ -88,7 +97,7 @@ public class AuthControllerPost {
             userService.RegisterUser(user);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new HashMap<String,String>(){{
-                        put("message","create success");
+                        put("message","create user success");
                     }});
         } catch (Exception ex){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

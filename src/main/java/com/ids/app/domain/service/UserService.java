@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public UserDto RegisterUser(UserDto user){
-        String encodedPassword = passwordEncoder.encode("12345678");
+        String encodedPassword = passwordEncoder.encode(user.getUserPassword());
         user.setUserPassword(encodedPassword);
         return userDtoService.save(user);
     }
