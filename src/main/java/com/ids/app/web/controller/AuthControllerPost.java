@@ -70,7 +70,7 @@ public class AuthControllerPost {
     @PostMapping("/register")
     public ResponseEntity<?>RegisterUser(@RequestBody UserRegistrationRequest request){
         try {
-            if (request.getUserEmail().isEmpty() && request.getUserName().isEmpty() && request.getPassword().isEmpty()){
+            if (request.getUserEmail().isEmpty() || request.getUserName().isEmpty() || request.getPassword().isEmpty()){
 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new HashMap<String,String>(){{

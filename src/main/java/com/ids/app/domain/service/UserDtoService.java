@@ -38,6 +38,15 @@ public class UserDtoService {
         LOGGER.info("saving user information...");
         return userRepository.save(user);
     }
+    public boolean update(UserDto userDto){
+        UserDto user = userDto;
+        if(userRepository.update(user)){
+            return true;
+        } else {
+            LOGGER.error("user dto service: error updating data (data not found)");
+        }
+        return false;
+    }
     public boolean delete(long id){
         return getById(id).map(user -> {
             userRepository.delete(id);

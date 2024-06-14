@@ -25,7 +25,6 @@ public class UsersControllerGet {
     }
     @GetMapping("/all")
     public ResponseEntity<List<UserDto>>getAll(){
-        List<UserDto> list = userDtoService.getAll();
         return new ResponseEntity<>(userDtoService.getByColumns(), HttpStatus.OK);
     }
     @GetMapping("/user")

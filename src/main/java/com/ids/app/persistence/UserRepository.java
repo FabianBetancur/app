@@ -36,13 +36,22 @@ public class UserRepository implements UserRepositoryDto {
     @Override
     public Optional<UserDto> getByEmail(String email) {
         return userCrudRepository.findByUserEmail(email)
-                .map(user -> mapper.toUserDto(user));
+                .map(mapper::toUserDto);
     }
-
     @Override
     public UserDto save(UserDto obj) {
         User dto = mapper.toUser(obj);
         return mapper.toUserDto(userCrudRepository.save(dto));
+    }
+    public boolean update(UserDto userDto){
+        Optional<User> user  = userCrudRepository.findById(userDto.getUserId());
+        if(user.isPresent()){
+            user.get().setUserName(userDto.getUserName());
+            user.get().setUserEmail(userDto.getUserEmail());
+            mapper.toUserDto(userCrudRepository.save(user.get()));
+            return true;
+        }
+        return false;
     }
     @Override
     public void delete(long id) {
@@ -50,7 +59,7 @@ public class UserRepository implements UserRepositoryDto {
     }
     public Optional<UserDto> getById(long id){
         return userCrudRepository.findById(id)
-                .map(user -> mapper.toUserDto(user));
+                .map(mapper::toUserDto);
     }
 
 }

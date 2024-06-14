@@ -52,8 +52,8 @@ public class SecurityConfig  {
                 .and()
                 .authorizeRequests()
                 //.antMatchers("/static/favicon.ico").permitAll()
-                .antMatchers("/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
+                //.antMatchers(HttpMethod.GET,"/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/email/send-email").permitAll()
                 .antMatchers(HttpMethod.GET,"/users/**").authenticated()
                 //
